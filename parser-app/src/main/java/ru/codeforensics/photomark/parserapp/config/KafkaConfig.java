@@ -1,4 +1,4 @@
-package ru.codeforensics.photomark.parserapp;
+package ru.codeforensics.photomark.parserapp.config;
 
 import java.util.HashMap;
 import java.util.Map;

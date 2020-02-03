@@ -1,5 +1,6 @@
-package ru.codeforensics.photomark.parserapp;
+package ru.codeforensics.photomark.parserapp.services;
 
+import java.util.UUID;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,10 +19,8 @@ public class FileParserService {
   @Autowired
   private ClientRepo clientRepo;
 
-  /*
   @Autowired
   private CephUploader cephUploader;
-  */
 
   @KafkaListener(topics = "${kafka.topic.files:photofiles}")
   private void onMessage(ConsumerRecord<String, byte[]> fileRecord) {
@@ -31,13 +30,13 @@ public class FileParserService {
     FileMetaTransfer fileMetaTransfer = (FileMetaTransfer) SerializationUtils
         .deserialize(fileRecord.value());
 
-    // throw new RuntimeException("failed");
-
     Photo photo = new Photo();
     photo.setClient(clientRepo.findById(fileMetaTransfer.getClientId()).orElse(null));
     photo.setLineId(fileMetaTransfer.getLineName());
     photo.setCode(fileMetaTransfer.getCode());
-    // photo.setFileUrl(cephUploader.upload(fileRecord.value()));
+    photo.setFileKey(UUID.randomUUID().toString());
     photoRepo.save(photo);
+
+    cephUploader.upload(photo.getFileKey(), fileRecord.value());
   }
 }

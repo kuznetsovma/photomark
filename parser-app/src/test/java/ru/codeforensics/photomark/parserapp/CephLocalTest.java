@@ -19,7 +19,7 @@ public class CephLocalTest {
 
     AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
     AmazonS3 conn = new AmazonS3Client(credentials);
-
+    conn.setEndpoint(endpoint);
     /*
     1.11
     AmazonS3 conn = AmazonS3ClientBuilder.standard()
@@ -28,7 +28,7 @@ public class CephLocalTest {
         .build();
     */
 
-    conn.setEndpoint(endpoint);
+
 
     List<Bucket> buckets = conn.listBuckets();
     for (Bucket bucket : buckets) {
