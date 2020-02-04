@@ -6,5 +6,5 @@ import ru.codeforensics.photomark.model.entities.Photo;
 
 public interface PhotoRepo extends CrudRepository<Photo, Long> {
 
-  Optional<Photo> findByFileKey(String fileKey);
+  Optional<Photo> findByCode(String code);
 }

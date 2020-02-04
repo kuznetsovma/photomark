@@ -14,6 +14,4 @@ public class Photo extends AbstractEntity {
   private String lineId;
 
   private String code;
-
-  private String fileKey;
 }
