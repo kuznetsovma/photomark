@@ -10,4 +10,6 @@ public interface ClientRepo extends CrudRepository<Client, Long> {
   @Cacheable
   @Override
   Optional<Client> findById(Long id);
+
+  Optional<Client> findByKey(String key);
 }
