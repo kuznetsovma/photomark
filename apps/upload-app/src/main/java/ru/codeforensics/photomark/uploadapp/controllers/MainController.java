@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
+import ru.codeforensics.photomark.uploadapp.security.ClientDetails;
 
 @Controller
 public class MainController {
@@ -43,10 +45,12 @@ public class MainController {
 
   @PostMapping("/api/v1/photos")
   public ResponseEntity uploadFile(
-      @RequestHeader(name = "id_client") Long clientId,
-      @RequestHeader(name = "line_name") String lineName,
-      @RequestHeader(name = "km") String code,
-      @RequestParam("file") MultipartFile file) throws IOException {
+    @RequestHeader(name = "line_name") String lineName,
+    @RequestHeader(name = "km") String code,
+    @RequestParam("file") MultipartFile file,
+    Authentication authentication) throws IOException {
+
+    Long clientId = ((ClientDetails) authentication.getPrincipal()).getClient().getId();
 
     FileWithMetaTransfer fileWithMetaTransfer = new FileWithMetaTransfer();
     fileWithMetaTransfer.setClientId(clientId);
