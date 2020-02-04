@@ -41,7 +41,7 @@ public class MainController {
     return ResponseEntity.ok(topics.values());
   }
 
-  @PostMapping("/uploadFile")
+  @PostMapping("/api/v1/photos")
   public ResponseEntity uploadFile(
       @RequestHeader(name = "id_client") Long clientId,
       @RequestHeader(name = "line_name") String lineName,
@@ -58,6 +58,6 @@ public class MainController {
     byte[] data = SerializationUtils.serialize(fileWithMetaTransfer);
     kafkaTemplate.send(filesTopic, code, data);
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.accepted().build();
   }
 }
