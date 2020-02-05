@@ -1,6 +1,7 @@
 package ru.codeforensics.photomark.restapp;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import java.io.IOException;
 import java.util.Optional;
@@ -35,6 +36,12 @@ public class MainController {
     }
 
     return ResponseEntity.ok(photoOptional.get());
+  }
+
+  @GetMapping("/readFileParamsFromCeph/{code}")
+  public ResponseEntity readFileParamsFromCeph(@PathVariable String code) {
+    ObjectMetadata objectMetadata = cephConnection.getObjectMetadata(bucketName, code);
+    return ResponseEntity.ok(objectMetadata.getUserMetadata());
   }
 
   @GetMapping("/downloadFile/{code}")
