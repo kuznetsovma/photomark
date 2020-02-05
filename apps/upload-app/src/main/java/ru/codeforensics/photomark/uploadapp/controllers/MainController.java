@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import ru.codeforensics.photomark.model.entities.Client;
+import ru.codeforensics.photomark.services.StatisticService;
 import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
 import ru.codeforensics.photomark.uploadapp.security.ClientDetails;
 
@@ -33,6 +35,9 @@ public class MainController {
   @Autowired
   private KafkaAdmin kafkaAdmin;
 
+  @Autowired
+  private StatisticService statisticService;
+
   @PostMapping("/createTopic/{name}")
   public ResponseEntity createTopic(@PathVariable String name) {
     AdminClient client = AdminClient.create(kafkaAdmin.getConfig());
@@ -45,15 +50,15 @@ public class MainController {
 
   @PostMapping("/api/v1/photos")
   public ResponseEntity uploadFile(
-    @RequestHeader(name = "line_name") String lineName,
-    @RequestHeader(name = "km") String code,
-    @RequestParam("file") MultipartFile file,
-    Authentication authentication) throws IOException {
+      @RequestHeader(name = "line_name") String lineName,
+      @RequestHeader(name = "km") String code,
+      @RequestParam("file") MultipartFile file,
+      Authentication authentication) throws IOException {
 
-    Long clientId = ((ClientDetails) authentication.getPrincipal()).getClient().getId();
+    Client client = ((ClientDetails) authentication.getPrincipal()).getClient();
 
     FileWithMetaTransfer fileWithMetaTransfer = new FileWithMetaTransfer();
-    fileWithMetaTransfer.setClientId(clientId);
+    fileWithMetaTransfer.setClientId(client.getId());
     fileWithMetaTransfer.setLineName(lineName);
     fileWithMetaTransfer.setCode(code);
     fileWithMetaTransfer.setFileName(file.getOriginalFilename());
@@ -61,6 +66,8 @@ public class MainController {
 
     byte[] data = SerializationUtils.serialize(fileWithMetaTransfer);
     kafkaTemplate.send(filesTopic, code, data);
+
+    statisticService.registerEvent(client, lineName);
 
     return ResponseEntity.accepted().build();
   }
