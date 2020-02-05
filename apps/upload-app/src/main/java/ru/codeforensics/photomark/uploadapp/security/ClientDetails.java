@@ -1,5 +1,6 @@
 package ru.codeforensics.photomark.uploadapp.security;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.codeforensics.photomark.model.entities.Client;
@@ -8,6 +9,7 @@ import java.util.Collection;
 
 public class ClientDetails implements UserDetails {
 
+  @Getter
   private Client client;
 
   public ClientDetails(Client client) {
@@ -17,10 +19,6 @@ public class ClientDetails implements UserDetails {
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return null;
-  }
-
-  public Client getClient() {
-    return client;
   }
 
   @Override

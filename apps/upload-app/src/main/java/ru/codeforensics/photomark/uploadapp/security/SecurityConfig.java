@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 
@@ -18,7 +17,7 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
-  private UserDetailsService userDetailsService;
+  private ClientDetailsService clientDetailsService;
 
   @Bean
   public RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter() throws Exception {
@@ -32,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
     PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
-    provider.setPreAuthenticatedUserDetailsService(new UserDetailsByNameServiceWrapper<>(userDetailsService));
+    provider.setPreAuthenticatedUserDetailsService(
+        new UserDetailsByNameServiceWrapper<>(clientDetailsService));
     return provider;
   }
 
