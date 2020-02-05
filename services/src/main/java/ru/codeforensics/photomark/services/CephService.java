@@ -11,6 +11,11 @@ import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
 @Service
 public class CephService {
 
+  public static final String CLIENT_ID_KEY = "clientid";
+  public static final String LINE_NAME_KEY = "linename";
+  public static final String FILE_NAME_KEY = "filename";
+
+
   @Value("${system.ceph.bucketName}")
   private String bucketName;
 
@@ -21,9 +26,9 @@ public class CephService {
     ByteArrayInputStream input = new ByteArrayInputStream(fileWithMetaTransfer.getFileData());
 
     ObjectMetadata metadata = new ObjectMetadata();
-    metadata.addUserMetadata("clientId", "" + fileWithMetaTransfer.getClientId());
-    metadata.addUserMetadata("lineName", fileWithMetaTransfer.getLineName());
-    metadata.addUserMetadata("fileName", fileWithMetaTransfer.getFileName());
+    metadata.addUserMetadata(CLIENT_ID_KEY, "" + fileWithMetaTransfer.getClientId());
+    metadata.addUserMetadata(LINE_NAME_KEY, fileWithMetaTransfer.getLineName());
+    metadata.addUserMetadata(FILE_NAME_KEY, fileWithMetaTransfer.getFileName());
 
     cephConnection.putObject(bucketName, fileWithMetaTransfer.getCode(), input, metadata);
   }
