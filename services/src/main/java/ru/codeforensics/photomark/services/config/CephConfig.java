@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("/ceph.properties")
+@PropertySource("classpath:/ceph.properties")
 public class CephConfig {
 
   @Value("${system.ceph.accessKey}")

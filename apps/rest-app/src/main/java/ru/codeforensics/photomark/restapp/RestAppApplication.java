@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = {"ru.codeforensics.photomark"})
 @EnableJpaRepositories(basePackages = {"ru.codeforensics.photomark.model.repo"})
 @EntityScan(basePackages = {"ru.codeforensics.photomark.model.entities"})
-@PropertySource({"/ceph.properties", "/db.properties"})
+@PropertySource({"classpath:/ceph.properties", "classpath:/db.properties"})
 public class RestAppApplication {
 
   public static void main(String[] args) {

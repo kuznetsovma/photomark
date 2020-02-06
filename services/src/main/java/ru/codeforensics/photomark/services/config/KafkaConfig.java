@@ -25,7 +25,7 @@ import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
 
 @EnableKafka
 @Configuration
-@PropertySource("/kafka.properties")
+@PropertySource("classpath:/kafka.properties")
 public class KafkaConfig {
 
   @Value("${spring.kafka.bootstrap-servers:127.0.0.1:9092}")
