@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import ru.codeforensics.photomark.model.repo.StatDataRepo;
 @Service
 public class StatisticService {
 
-  private Map<StatDataId, Integer> cash = new ConcurrentHashMap<>();
+  private final Map<StatDataId, Integer> cash = new ConcurrentHashMap<>();
 
   @Autowired
   private StatDataRepo statDataRepo;
@@ -28,7 +29,7 @@ public class StatisticService {
     cash.computeIfPresent(statDataId, (key, value) -> value + 1);
   }
 
-  @Scheduled(fixedDelay = 3000)
+  @Scheduled(fixedDelay = 10_000)
   public void flushCashToBase() {
     Map<StatDataId, Integer> tmpCash;
     synchronized (cash) {
@@ -40,13 +41,20 @@ public class StatisticService {
       StatDataId statDataId = entry.getKey();
       Integer count = entry.getValue();
 
-      StatData statData = getStatData(statDataId);
-      statData.addCount(count);
-      statDataRepo.save(statData);
-
-      tmpCash.remove(statDataId);
+      updateStatData(statDataId, count, tmpCash);
     }
+  }
 
+  private void updateStatData(StatDataId statDataId, Integer count,
+      Map<StatDataId, Integer> tmpCash) {
+    StatData statData = getStatData(statDataId);
+    statData.addCount(count);
+    try {
+      statDataRepo.save(statData);
+      tmpCash.remove(statDataId);
+    } catch (OptimisticLockException e) {
+      updateStatData(statDataId, count, tmpCash);
+    }
   }
 
   private StatData getStatData(StatDataId statDataId) {
