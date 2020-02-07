@@ -1,5 +1,7 @@
 package ru.codeforensics.photomark.uploadapp.controllers;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import java.io.IOException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.SerializationUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,12 +20,16 @@ import ru.codeforensics.photomark.model.entities.Client;
 import ru.codeforensics.photomark.model.repo.ClientRepo;
 import ru.codeforensics.photomark.services.StatisticService;
 import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
+import ru.codeforensics.photomark.transfer.enums.UploadStatus;
 
 @Controller
 public class MainController {
 
   @Value("${kafka.topic.files}")
   private String filesTopic;
+
+  @Value("${system.ceph.bucketName}")
+  private String bucketName;
 
   @Autowired
   private KafkaTemplate<String, byte[]> kafkaTemplate;
@@ -32,6 +39,9 @@ public class MainController {
 
   @Autowired
   private StatisticService statisticService;
+
+  @Autowired
+  private AmazonS3 cephConnection;
 
   @PostMapping("/api/v1/photos")
   public ResponseEntity uploadFile(
@@ -59,6 +69,28 @@ public class MainController {
 
     statisticService.registerEvent(client, lineName);
 
-    return ResponseEntity.accepted().build();
+    return ResponseEntity.accepted().body(code);
+  }
+
+  @GetMapping("/api/v1/checkStatus")
+  public ResponseEntity checkStatus(
+      @RequestHeader("X-API-Key") String xApiKey,
+      @RequestParam(name = "km") String code) {
+
+    Optional<Client> clientOptional = clientRepo.findByKey(xApiKey);
+    if (!clientOptional.isPresent()) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    try {
+      cephConnection.getObjectMetadata(bucketName, code);
+      return ResponseEntity.ok(UploadStatus.UPLOADED);
+    } catch (AmazonS3Exception s3e) {
+      if (404 == s3e.getStatusCode()) {
+        return ResponseEntity.ok(UploadStatus.IN_QUEUE);
+      } else {
+        throw s3e;
+      }
+    }
   }
 }

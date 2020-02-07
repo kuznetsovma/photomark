@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = {"ru.codeforensics.photomark"})
 @EnableJpaRepositories(basePackages = {"ru.codeforensics.photomark.model.repo"})
 @EntityScan(basePackages = {"ru.codeforensics.photomark.model.entities"})
-@PropertySource({"classpath:/kafka.properties", "classpath:/db.properties"})
+@PropertySource({"classpath:/kafka.properties", "classpath:/db.properties", "classpath:/ceph.properties"})
 @EnableScheduling
 @EnableCaching
 public class UploadAppApplication {
