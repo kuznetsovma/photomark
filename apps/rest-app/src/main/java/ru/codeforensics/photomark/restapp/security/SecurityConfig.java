@@ -1,4 +1,4 @@
-package ru.codeforensics.photomark.uploadapp.security;
+package ru.codeforensics.photomark.restapp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,13 +16,15 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+  public static final String KEY_HEADER_NAME = "X-API-Key";
+
   @Autowired
-  private ClientDetailsService clientDetailsService;
+  private UserSessionDetailsService userSessionDetailsService;
 
   @Bean
   public RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter() throws Exception {
     RequestHeaderAuthenticationFilter filter = new RequestHeaderAuthenticationFilter();
-    filter.setPrincipalRequestHeader("X-API-Key");
+    filter.setPrincipalRequestHeader(KEY_HEADER_NAME);
     filter.setAuthenticationManager(authenticationManager());
     filter.setExceptionIfHeaderMissing(false);
     return filter;
@@ -32,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
     PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
     provider.setPreAuthenticatedUserDetailsService(
-        new UserDetailsByNameServiceWrapper<>(clientDetailsService));
+        new UserDetailsByNameServiceWrapper<>(userSessionDetailsService));
     return provider;
   }
 

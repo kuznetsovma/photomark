@@ -1,4 +1,4 @@
-package ru.codeforensics.photomark.restapp;
+package ru.codeforensics.photomark.restapp.controllers;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;

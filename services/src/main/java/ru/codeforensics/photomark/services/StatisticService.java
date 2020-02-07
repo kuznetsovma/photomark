@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.OptimisticLockException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import ru.codeforensics.photomark.model.repo.StatDataRepo;
 
 @Service
 public class StatisticService {
+
+  private static final Logger logger = LoggerFactory.getLogger(StatisticService.class);
 
   private final Map<StatDataId, Integer> cash = new ConcurrentHashMap<>();
 
@@ -53,6 +57,7 @@ public class StatisticService {
       statDataRepo.save(statData);
       tmpCash.remove(statDataId);
     } catch (OptimisticLockException e) {
+      logger.warn("updateStatData: {}", e.getMessage());
       updateStatData(statDataId, count, tmpCash);
     }
   }
