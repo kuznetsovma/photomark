@@ -1,5 +1,6 @@
 package ru.codeforensics.photomark.model.repo;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -10,6 +11,9 @@ import ru.codeforensics.photomark.model.entities.Client;
 public interface ClientRepo extends CrudRepository<Client, Long> {
 
   String CACHE_NAME = "clientByKey";
+
+  @Override
+  List<Client> findAll();
 
   @Cacheable(CACHE_NAME)
   Optional<Client> findByKey(String key);
