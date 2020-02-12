@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>transfer</module>
-    <module>model</module>
+    <module>models/model-rdb</module>
     <module>config</module>
     <module>services</module>
     <module>apps/parser-app</module>

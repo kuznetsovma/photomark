@@ -10,9 +10,9 @@
   </parent>
 
   <groupId>ru.codeforensics.photomark</groupId>
-  <artifactId>model</artifactId>
+  <artifactId>model-rdb</artifactId>
   <version>0.0.1</version>
-  <name>model</name>
+  <name>model-rdb</name>
 
   <properties>
     <java.version>1.8</java.version>

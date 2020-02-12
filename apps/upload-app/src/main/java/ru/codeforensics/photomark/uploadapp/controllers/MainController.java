@@ -47,7 +47,7 @@ public class MainController {
   public ResponseEntity uploadFile(
       @RequestHeader(name = "line_name") String lineName,
       @RequestHeader(name = "km") String code,
-      @RequestHeader("X-API-Key") String xApiKey,
+      @RequestHeader(name = "X-API-Key") String xApiKey,
       @RequestParam("file") MultipartFile file) throws IOException {
 
     Optional<Client> clientOptional = clientRepo.findByKey(xApiKey);

@@ -34,8 +34,12 @@ public class CephService {
     ByteArrayInputStream input = new ByteArrayInputStream(fileWithMetaTransfer.getFileData());
 
     ObjectMetadata metadata = new ObjectMetadata();
-    metadata.addUserMetadata(CLIENT_ID_KEY, "" + fileWithMetaTransfer.getClientId());
-    metadata.addUserMetadata(LINE_NAME_KEY, fileWithMetaTransfer.getLineName());
+    if (null != fileWithMetaTransfer.getClientId()) {
+      metadata.addUserMetadata(CLIENT_ID_KEY, "" + fileWithMetaTransfer.getClientId());
+    }
+    if (null != fileWithMetaTransfer.getLineName()) {
+      metadata.addUserMetadata(LINE_NAME_KEY, fileWithMetaTransfer.getLineName());
+    }
     metadata.addUserMetadata(FILE_NAME_KEY, fileWithMetaTransfer.getFileName());
 
     cephConnection.putObject(bucketName, fileWithMetaTransfer.getCode(), input, metadata);
