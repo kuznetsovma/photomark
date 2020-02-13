@@ -15,7 +15,7 @@ import ru.codeforensics.photomark.transfer.enums.UserAuthority;
 @Entity
 public class UserProfile extends AbstractEntity {
 
-  private String login;
+  private String email;
 
   private String passwordHash;
 

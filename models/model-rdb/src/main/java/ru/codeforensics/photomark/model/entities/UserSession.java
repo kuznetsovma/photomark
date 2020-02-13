@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import lombok.Data;
+import ru.codeforensics.photomark.transfer.UserSessionTransfer;
 
 @Data
 @Entity
@@ -14,7 +15,11 @@ public class UserSession extends AbstractEntity {
 
   private String token;
 
-  private LocalDateTime created;
+  private LocalDateTime created = LocalDateTime.now();
 
   private LocalDateTime expired;
+
+  public UserSessionTransfer toTransfer() {
+    return new UserSessionTransfer(token, created, expired);
+  }
 }

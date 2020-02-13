@@ -33,7 +33,7 @@ public class UserSessionDetails implements UserDetails {
   @Override
   public String getUsername() {
     UserProfile userProfile = userSession.getUserProfile();
-    return userProfile.getLogin();
+    return userProfile.getEmail();
   }
 
   @Override
