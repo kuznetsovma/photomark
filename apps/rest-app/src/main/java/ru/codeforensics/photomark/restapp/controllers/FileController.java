@@ -14,18 +14,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.codeforensics.photomark.services.CephService;
 import ru.codeforensics.photomark.services.DataMatrixService;
 import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
 
-@Controller
+@RestController
 public class FileController {
 
   @Autowired
