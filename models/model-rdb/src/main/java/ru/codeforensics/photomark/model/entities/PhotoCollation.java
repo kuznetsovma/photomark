@@ -36,6 +36,18 @@ public class PhotoCollation extends AbstractEntity {
   @Column(nullable = false)
   private byte result = RESULT_UNKNOWN;
 
+  @Column
+  private String sampleKey;
+
+  @Column
+  private String sampleCode;
+
+  @Column
+  private String originalKey;
+
+  @Column
+  private String originalCode;
+
   public PhotoCollationTransfer toTransfer() {
     PhotoCollationTransfer transfer = new PhotoCollationTransfer();
     transfer.setId(id);

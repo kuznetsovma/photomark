@@ -1,8 +1,11 @@
 package ru.codeforensics.photomark.restapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -10,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import ru.codeforensics.photomark.model.entities.PhotoCollation;
 import ru.codeforensics.photomark.model.repo.PhotoCollationRepo;
 import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
+import ru.codeforensics.photomark.transfer.PhotoCollationTaskTransfer;
 import ru.codeforensics.photomark.transfer.PhotoCollationTransfer;
 
 import java.io.IOException;
@@ -19,8 +23,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/photo-collations")
+@RequestMapping("/api/v1/photo_collations")
 public class PhotoCollationController {
+
+  @Autowired
+  private KafkaTemplate<Long, byte[]> taskKafkaTemplate;
+
+  @Value("${kafka.topic.photo_collation_tasks}")
+  private String tasksTopic;
 
   @Autowired
   private PhotoCollationRepo photoCollationRepo;
@@ -45,13 +55,16 @@ public class PhotoCollationController {
   @PostMapping("")
   public ResponseEntity create(@RequestParam("sample") MultipartFile sample)
       throws IOException {
-    FileWithMetaTransfer file = new FileWithMetaTransfer();
-    file.setFileData(sample.getBytes());
-    file.setFileName(sample.getOriginalFilename());
     PhotoCollation collation = new PhotoCollation();
     photoCollationRepo.save(collation);
 
-    // TODO: Store file and collation to Kafka.
+    PhotoCollationTaskTransfer task = new PhotoCollationTaskTransfer();
+    task.setPhotoCollationId(collation.getId());
+    task.setSampleFileData(sample.getBytes());
+    task.setSampleFileName(sample.getOriginalFilename());
+
+    byte[] data = SerializationUtils.serialize(task);
+    taskKafkaTemplate.send(tasksTopic, collation.getId(), data);
 
     return ResponseEntity
         .created(URI.create(MvcUriComponentsBuilder.fromMappingName("PCC#get").arg(0, collation.getId()).build()))
