@@ -2,17 +2,18 @@ package ru.codeforensics.photomark.restapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.util.SerializationUtils;
+//import org.springframework.kafka.core.KafkaTemplate;
+//import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import ru.codeforensics.photomark.model.entities.PhotoCollation;
 import ru.codeforensics.photomark.model.repo.PhotoCollationRepo;
-import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
 import ru.codeforensics.photomark.transfer.PhotoCollationTaskTransfer;
 import ru.codeforensics.photomark.transfer.PhotoCollationTransfer;
 
@@ -26,8 +27,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/photo_collations")
 public class PhotoCollationController {
 
-  @Autowired
-  private KafkaTemplate<Long, byte[]> taskKafkaTemplate;
+//  @Autowired
+//  private KafkaTemplate<Long, byte[]> taskKafkaTemplate;
 
   @Value("${kafka.topic.photo_collation_tasks}")
   private String tasksTopic;
@@ -36,7 +37,7 @@ public class PhotoCollationController {
   private PhotoCollationRepo photoCollationRepo;
 
   @GetMapping("/{id}")
-  public ResponseEntity get(@PathVariable Long id)
+  public ResponseEntity get(@PathVariable("id") Long id)
       throws ResponseStatusException {
     Optional<PhotoCollation> collation = photoCollationRepo.findById(id);
     if (!collation.isPresent()) {
@@ -46,8 +47,15 @@ public class PhotoCollationController {
   }
 
   @GetMapping("")
-  public ResponseEntity getAll() {
-    List<PhotoCollationTransfer> transfers = photoCollationRepo.findAll().stream().map(PhotoCollation::toTransfer)
+  public ResponseEntity getAll(@RequestParam(name = "page", required = false, defaultValue = "0") int page)
+      throws ResponseStatusException {
+    Pageable paging;
+    try { paging = PageRequest.of(page, 10); }
+    catch (IllegalArgumentException exception) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    List<PhotoCollationTransfer> transfers = photoCollationRepo.findAll(paging).stream().map(PhotoCollation::toTransfer)
         .collect(Collectors.toList());
     return ResponseEntity.ok(transfers);
   }
@@ -63,8 +71,9 @@ public class PhotoCollationController {
     task.setSampleFileData(sample.getBytes());
     task.setSampleFileName(sample.getOriginalFilename());
 
-    byte[] data = SerializationUtils.serialize(task);
-    taskKafkaTemplate.send(tasksTopic, collation.getId(), data);
+// TODO: Put collation to Kafka.
+//    byte[] data = SerializationUtils.serialize(task);
+//    taskKafkaTemplate.send(tasksTopic, collation.getId(), data);
 
     return ResponseEntity
         .created(URI.create(MvcUriComponentsBuilder.fromMappingName("PCC#get").arg(0, collation.getId()).build()))
