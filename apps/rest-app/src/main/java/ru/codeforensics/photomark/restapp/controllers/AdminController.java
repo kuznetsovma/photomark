@@ -20,7 +20,7 @@ public class AdminController {
   private UserProfileRepo userProfileRepo;
 
   @Secured("ROLE_ADMIN")
-  @PostMapping("/v1/admin/registerUser")
+  @PostMapping("/admin/registerUser")
   public ResponseEntity registerUser(@RequestBody UserTransfer userTransfer) {
     UserProfile userProfile = new UserProfile();
     userProfile.setEmail(userTransfer.getEmail());

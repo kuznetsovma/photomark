@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .addFilter(requestHeaderAuthenticationFilter())
         .authorizeRequests()
-        .antMatchers("/v1/login", "/api-docs/**", "/swagger*/**").permitAll()
+        .antMatchers("/login", "/api-docs/**", "/swagger*/**").permitAll()
         .anyRequest().authenticated();
   }
 }

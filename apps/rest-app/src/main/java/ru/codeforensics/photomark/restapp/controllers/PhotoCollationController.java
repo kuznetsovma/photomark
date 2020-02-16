@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/photo_collations")
+@RequestMapping("/photo_collations")
 public class PhotoCollationController {
 
 //  @Autowired
