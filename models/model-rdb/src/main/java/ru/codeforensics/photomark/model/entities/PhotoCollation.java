@@ -5,6 +5,7 @@ import ru.codeforensics.photomark.transfer.PhotoCollationTransfer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,6 +21,9 @@ public class PhotoCollation extends AbstractEntity {
   public static final byte RESULT_UNKNOWN = 0;
   public static final byte RESULT_SUCCEED = 1;
   public static final byte RESULT_FAILED = 2;
+
+  @ManyToOne
+  private UserProfile userProfile;
 
   @Column(nullable = false)
   private LocalDateTime createdAt = LocalDateTime.now();
