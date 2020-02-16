@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import lombok.Data;
+import ru.codeforensics.photomark.transfer.UserTransfer;
 import ru.codeforensics.photomark.transfer.enums.UserAuthority;
 
 @Data
@@ -23,4 +24,12 @@ public class UserProfile extends AbstractEntity {
   @CollectionTable(name = "user_user_authority", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "authority")
   private Set<UserAuthority> authorities = new HashSet<>();
+
+  public UserTransfer toTransfer() {
+    UserTransfer transfer = new UserTransfer();
+    transfer.setId(id);
+    transfer.setEmail(email);
+    transfer.getAuthorities().addAll(authorities);
+    return transfer;
+  }
 }
