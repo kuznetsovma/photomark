@@ -60,6 +60,9 @@ public class PhotoCollation extends AbstractEntity {
     transfer.setFinishedAt(finishedAt);
     transfer.setStatus(status);
     transfer.setResult(result);
+    transfer.setSample(new PhotoCollationTransfer.PhotoCollationSampleTransfer());
+    transfer.getSample().setCode(sampleCode);
+    transfer.getSample().setLocation("http://...");
     return transfer;
   }
 

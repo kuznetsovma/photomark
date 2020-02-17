@@ -1,5 +1,8 @@
 package ru.codeforensics.photomark.restapp.controllers;
 
+import com.google.zxing.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -17,11 +20,15 @@ import ru.codeforensics.photomark.model.entities.PhotoCollation;
 import ru.codeforensics.photomark.model.entities.UserProfile;
 import ru.codeforensics.photomark.model.repo.PhotoCollationRepo;
 import ru.codeforensics.photomark.restapp.security.UserSessionDetails;
-import ru.codeforensics.photomark.transfer.PhotoCollationTaskTransfer;
+import ru.codeforensics.photomark.services.DataMatrixService;
+//import ru.codeforensics.photomark.transfer.PhotoCollationTaskTransfer;
 import ru.codeforensics.photomark.transfer.PhotoCollationTransfer;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +36,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/photo_collations")
 public class PhotoCollationController {
+
+  @Autowired
+  private DataMatrixService dataMatrixService;
 
 //  @Autowired
 //  private KafkaTemplate<Long, byte[]> taskKafkaTemplate;
@@ -38,6 +48,8 @@ public class PhotoCollationController {
 
   @Autowired
   private PhotoCollationRepo photoCollationRepo;
+
+  private static Logger logger = LoggerFactory.getLogger(PhotoCollationController.class);
 
   @GetMapping("/{id}")
   public ResponseEntity get(@PathVariable("id") Long id, Authentication authentication)
@@ -82,12 +94,48 @@ public class PhotoCollationController {
     photoCollation.setUserProfile(userProfile);
     photoCollationRepo.save(photoCollation);
 
-    PhotoCollationTaskTransfer task = new PhotoCollationTaskTransfer();
-    task.setPhotoCollationId(photoCollation.getId());
-    task.setSampleFileData(sample.getBytes());
-    task.setSampleFileName(sample.getOriginalFilename());
+    photoCollation.setStartedAt(LocalDateTime.now());
+    photoCollation.setStatus(PhotoCollation.STATUS_PROCESSING);
+    photoCollationRepo.save(photoCollation);
+
+// TODO: Store sample photo to Ceph.
+//
+//    photoCollation.setSampleKey(sampleKey);
+
+    String sampleCode = null;
+    try {
+      byte[] sampleContent = sample.getBytes();
+      sampleCode = dataMatrixService.decode(ImageIO.read(new ByteArrayInputStream(sampleContent)));
+    }
+    catch (NotFoundException exception) {
+      photoCollation.setStatus(PhotoCollation.STATUS_SUCCEED);
+      photoCollation.setResult(PhotoCollation.RESULT_FAILED);
+    }
+    catch (Exception exception) {
+      logger.error("Photo collation processing failed: " + exception.getMessage(), exception);
+      photoCollation.setStatus(PhotoCollation.STATUS_FAILED);
+    }
+
+    if (photoCollation.getStatus() == PhotoCollation.STATUS_PROCESSING) {
+      photoCollation.setSampleCode(sampleCode);
+
+// TODO: Find original photo in Ceph by code.
+//
+//    photoCollation.setOriginalKey(originalKey);
+
+      photoCollation.setStatus(PhotoCollation.STATUS_SUCCEED);
+    }
+
+    photoCollation.setFinishedAt(LocalDateTime.now());
+    photoCollationRepo.save(photoCollation);
 
 // TODO: Put photoCollation to Kafka.
+//
+//    PhotoCollationTaskTransfer task = new PhotoCollationTaskTransfer();
+//    task.setPhotoCollationId(photoCollation.getId());
+//    task.setSampleFileData(sample.getBytes());
+//    task.setSampleFileName(sample.getOriginalFilename());
+//
 //    byte[] data = SerializationUtils.serialize(task);
 //    taskKafkaTemplate.send(tasksTopic, photoCollation.getId(), data);
 
