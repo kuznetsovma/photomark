@@ -18,7 +18,7 @@ public class ClientController {
   private ClientRepo clientRepo;
 
   @Secured("ROLE_ADMIN")
-  @GetMapping("/clients/")
+  @GetMapping("/clients")
   public ResponseEntity getAll() {
     List<ClientTransfer> clientTransfers = clientRepo.findAll().stream().map(Client::toTransfer)
         .collect(Collectors.toList());

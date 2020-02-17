@@ -29,7 +29,7 @@ public class LoginController {
   @Autowired
   private UserSessionRepo userSessionRepo;
 
-  @PostMapping("/v1/login")
+  @PostMapping("/login")
   public ResponseEntity login(@RequestBody LoginTransfer transfer) {
     String pwdHash = cryptoService.hash(transfer.getPassword());
     Optional<UserProfile> userProfileOptional = userProfileRepo
@@ -44,7 +44,7 @@ public class LoginController {
   }
 
 
-  @PostMapping("/v1/logout")
+  @PostMapping("/logout")
   public ResponseEntity logout(Authentication authentication) {
     Object principal = authentication.getPrincipal();
     if (principal instanceof UserSessionDetails) {
