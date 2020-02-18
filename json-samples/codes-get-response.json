@@ -1,0 +1,27 @@
+{
+  "codes": [
+    {
+      "id": 1,
+      "dateTime": "2020-02-04T06:29:32.371",
+      "standard": "http://asdasd.asdasd.asdasd/asdasdasdasdasdasdd.jpg",
+      "code": "asdasdasdasdasdasdd",
+      "line": "00000123"
+    },
+    {
+      "id": 2,
+      "dateTime": "2020-02-04T06:29:32.371",
+      "standard": "http://asdasd.asdasd.asdasd/fghfdsghdfghdfghdf.jpg",
+      "code": "fghfdsghdfghdfghdf",
+      "line": "00000123"
+    },
+    {
+      "id": 3,
+      "dateTime": "2020-02-04T06:29:32.371",
+      "standard": "http://asdasd.asdasd.asdasd/cvnbmvcbnmcvbmcvmb.jpg",
+      "code": "cvnbmvcbnmcvbmcvmb",
+      "line": "00000123"
+    }
+  ],
+  "page": 1,
+  "limit": 30
+}

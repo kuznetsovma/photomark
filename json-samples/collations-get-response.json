@@ -1,0 +1,25 @@
+{
+  "collations": [
+    {
+      "id": 1,
+      "dateTime": "2020-02-04T06:29:32.371",
+      "file": "http://asdasd.asdasd.asdasd/skdfjsoieryu28973wuds9823y29hd.jpg",
+      "code": "asdasdasdasdasdasdd",
+      "status": "OK"
+    },
+    {
+      "id": 2,
+      "dateTime": "2020-02-04T06:29:32.371",
+      "file": "http://asdasd.asdasd.asdasd/skdfjsoieryu28973wuds9823y29hd.jpg",
+      "status": "NOT_FOUND"
+    },
+    {
+      "id": 3,
+      "dateTime": "2020-02-04T06:29:32.371",
+      "file": "http://asdasd.asdasd.asdasd/skdfjsoieryu28973wuds9823y29hd.jpg",
+      "status": "PROCESSING"
+    }
+  ],
+  "page": 1,
+  "limit": 30
+}
