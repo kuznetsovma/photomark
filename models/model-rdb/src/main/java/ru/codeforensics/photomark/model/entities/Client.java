@@ -3,7 +3,7 @@ package ru.codeforensics.photomark.model.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import lombok.Data;
-import ru.codeforensics.photomark.transfer.ClientTransfer;
+import ru.codeforensics.photomark.transfer.admin.ClientTransfer;
 
 @Data
 @Entity

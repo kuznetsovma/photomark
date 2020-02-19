@@ -15,10 +15,10 @@ import ru.codeforensics.photomark.model.repo.UserSessionRepo;
 import ru.codeforensics.photomark.restapp.security.UserSessionDetails;
 import ru.codeforensics.photomark.services.CryptoService;
 import ru.codeforensics.photomark.services.UserSessionService;
-import ru.codeforensics.photomark.transfer.LoginTransfer;
+import ru.codeforensics.photomark.transfer.login.LoginTransfer;
 
 @RestController
-public class LoginController {
+public class LoginController extends AbstractController {
 
   @Autowired
   private CryptoService cryptoService;

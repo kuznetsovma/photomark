@@ -7,7 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.util.SerializationUtils;
 import ru.codeforensics.photomark.services.CephService;
-import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
+import ru.codeforensics.photomark.transfer.inner.FileWithMetaTransfer;
 
 @Service
 public class FileParserService {

@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
+import ru.codeforensics.photomark.transfer.inner.FileWithMetaTransfer;
 
 @Service
 public class CephService {
@@ -17,16 +17,23 @@ public class CephService {
   public static final String FILE_NAME_KEY = "filename";
 
 
-  @Value("${system.ceph.bucketName}")
-  private String bucketName;
+  @Value("${system.ceph.bucketName.photos}")
+  private String photosBucketName;
+
+  @Value("${system.ceph.bucketName.collation}")
+  private String photoCollationsBucketName;
 
   @Autowired
   private AmazonS3 cephConnection;
 
   @PostConstruct
   private void init() {
-    if (!cephConnection.doesBucketExist(bucketName)) {
-      cephConnection.createBucket(bucketName);
+    if (!cephConnection.doesBucketExist(photosBucketName)) {
+      cephConnection.createBucket(photosBucketName);
+    }
+
+    if (!cephConnection.doesBucketExist(photoCollationsBucketName)) {
+      cephConnection.createBucket(photoCollationsBucketName);
     }
   }
 
@@ -42,6 +49,6 @@ public class CephService {
     }
     metadata.addUserMetadata(FILE_NAME_KEY, fileWithMetaTransfer.getFileName());
 
-    cephConnection.putObject(bucketName, fileWithMetaTransfer.getCode(), input, metadata);
+    cephConnection.putObject(photosBucketName, fileWithMetaTransfer.getCode(), input, metadata);
   }
 }

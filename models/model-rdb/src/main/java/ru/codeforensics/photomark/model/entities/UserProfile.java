@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import lombok.Data;
-import ru.codeforensics.photomark.transfer.UserTransfer;
+import ru.codeforensics.photomark.transfer.admin.UserTransfer;
 import ru.codeforensics.photomark.transfer.enums.UserAuthority;
 
 @Data

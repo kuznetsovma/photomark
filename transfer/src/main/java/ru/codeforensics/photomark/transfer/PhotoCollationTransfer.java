@@ -1,26 +1,23 @@
 package ru.codeforensics.photomark.transfer;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
+import lombok.Data;
+import ru.codeforensics.photomark.transfer.enums.PhotoCollationStatus;
 
 @Data
 public class PhotoCollationTransfer {
 
-  @Data
-  public static class  PhotoCollationSampleTransfer {
-
-    private String code;
-    private String location;
-
-  }
-
   private Long id;
-  private LocalDateTime createdAt;
-  private LocalDateTime startedAt;
-  private LocalDateTime finishedAt;
-  private byte status;
-  private byte result;
-  private PhotoCollationSampleTransfer sample;
+  private Long userId;
+
+  private LocalDateTime created;
+  private LocalDateTime started;
+  private LocalDateTime finished;
+
+  private String code;
+  private String standard;
+  private String file;
+
+  private PhotoCollationStatus status;
 
 }

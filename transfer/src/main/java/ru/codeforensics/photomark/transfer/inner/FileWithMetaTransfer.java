@@ -1,4 +1,4 @@
-package ru.codeforensics.photomark.transfer;
+package ru.codeforensics.photomark.transfer.inner;
 
 import java.io.Serializable;
 import lombok.Data;

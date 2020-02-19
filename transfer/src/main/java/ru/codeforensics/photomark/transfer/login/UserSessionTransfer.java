@@ -1,4 +1,4 @@
-package ru.codeforensics.photomark.transfer;
+package ru.codeforensics.photomark.transfer.login;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

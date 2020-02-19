@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.codeforensics.photomark.model.entities.Client;
 import ru.codeforensics.photomark.model.repo.ClientRepo;
 import ru.codeforensics.photomark.services.StatisticService;
-import ru.codeforensics.photomark.transfer.FileWithMetaTransfer;
 import ru.codeforensics.photomark.transfer.enums.UploadStatus;
+import ru.codeforensics.photomark.transfer.inner.FileWithMetaTransfer;
 
 @Controller
 public class MainController {
@@ -28,8 +28,8 @@ public class MainController {
   @Value("${kafka.topic.files}")
   private String filesTopic;
 
-  @Value("${system.ceph.bucketName}")
-  private String bucketName;
+  @Value("${system.ceph.bucketName.photos}")
+  private String photosBucketName;
 
   @Autowired
   private KafkaTemplate<String, byte[]> kafkaTemplate;
@@ -83,7 +83,7 @@ public class MainController {
     }
 
     try {
-      cephConnection.getObjectMetadata(bucketName, code);
+      cephConnection.getObjectMetadata(photosBucketName, code);
       return ResponseEntity.ok(UploadStatus.UPLOADED);
     } catch (AmazonS3Exception s3e) {
       if (404 == s3e.getStatusCode()) {
