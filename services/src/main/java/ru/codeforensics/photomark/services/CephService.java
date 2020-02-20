@@ -7,15 +7,9 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.codeforensics.photomark.transfer.inner.FileWithMetaTransfer;
 
 @Service
 public class CephService {
-
-  public static final String CLIENT_ID_KEY = "clientid";
-  public static final String LINE_NAME_KEY = "linename";
-  public static final String FILE_NAME_KEY = "filename";
-
 
   @Value("${system.ceph.bucketName.photos}")
   private String photosBucketName;
@@ -37,18 +31,8 @@ public class CephService {
     }
   }
 
-  public void upload(FileWithMetaTransfer fileWithMetaTransfer) {
-    ByteArrayInputStream input = new ByteArrayInputStream(fileWithMetaTransfer.getFileData());
-
-    ObjectMetadata metadata = new ObjectMetadata();
-    if (null != fileWithMetaTransfer.getClientId()) {
-      metadata.addUserMetadata(CLIENT_ID_KEY, "" + fileWithMetaTransfer.getClientId());
-    }
-    if (null != fileWithMetaTransfer.getLineName()) {
-      metadata.addUserMetadata(LINE_NAME_KEY, fileWithMetaTransfer.getLineName());
-    }
-    metadata.addUserMetadata(FILE_NAME_KEY, fileWithMetaTransfer.getFileName());
-
-    cephConnection.putObject(photosBucketName, fileWithMetaTransfer.getCode(), input, metadata);
+  public void upload(String code, byte[] fileContent) {
+    ByteArrayInputStream input = new ByteArrayInputStream(fileContent);
+    cephConnection.putObject(photosBucketName, code, input, new ObjectMetadata());
   }
 }

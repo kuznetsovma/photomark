@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +25,6 @@ import ru.codeforensics.photomark.services.CryptoService;
 import ru.codeforensics.photomark.services.DataMatrixService;
 import ru.codeforensics.photomark.transfer.admin.ClientTransfer;
 import ru.codeforensics.photomark.transfer.admin.UserTransfer;
-import ru.codeforensics.photomark.transfer.inner.FileWithMetaTransfer;
 
 @RestController
 public class AdminController extends AbstractController {
@@ -76,15 +74,7 @@ public class AdminController extends AbstractController {
     byte[] fileContent = file.getBytes();
     String code = dataMatrixService.decode(ImageIO.read(new ByteArrayInputStream(fileContent)));
 
-    FileWithMetaTransfer fileWithMetaTransfer = new FileWithMetaTransfer();
-    fileWithMetaTransfer.setCode(code);
-    fileWithMetaTransfer.setClientId(clientId);
-    fileWithMetaTransfer.setLineName(lineName);
-    fileWithMetaTransfer.setFileName(file.getOriginalFilename());
-    fileWithMetaTransfer.setFileData(fileContent);
-
-    byte[] data = SerializationUtils.serialize(fileWithMetaTransfer);
-    kafkaTemplate.send(photoFilesTopic, code, data);
+    kafkaTemplate.send(photoFilesTopic, code, fileContent);
 
     return ResponseEntity.accepted().body(code);
   }

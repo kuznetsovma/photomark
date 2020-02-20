@@ -1,3 +1,5 @@
+config/src/main/resources/application-local.properties
+
 **/target
 **/.mvn
 *.log

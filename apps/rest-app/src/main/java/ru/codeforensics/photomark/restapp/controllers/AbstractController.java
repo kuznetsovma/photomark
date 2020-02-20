@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import ru.codeforensics.photomark.model.entities.UserSession;
 import ru.codeforensics.photomark.restapp.security.UserSessionDetails;
-import ru.codeforensics.photomark.services.CephService;
 
 public abstract class AbstractController {
 
@@ -30,10 +29,8 @@ public abstract class AbstractController {
 
   protected void s3ObjectToClient(S3Object object, HttpServletResponse response)
       throws IOException {
-    String fileName = object.getObjectMetadata().getUserMetadata().get(CephService.FILE_NAME_KEY);
-
     response.setHeader("Content-Disposition",
-        String.format("attachment; filename=\"%s\"", fileName));
+        String.format("attachment; filename=\"%s\"", object.getKey()));
     response.setHeader("Content-Type", "application/octet-stream");
 
     IOUtils.copy(object.getObjectContent(), response.getOutputStream());

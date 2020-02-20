@@ -7,6 +7,7 @@
   <modules>
     <module>transfer</module>
     <module>models/model-rdb</module>
+    <module>models/model-cassandra</module>
     <module>config</module>
     <module>services</module>
     <module>apps/parser-app</module>
