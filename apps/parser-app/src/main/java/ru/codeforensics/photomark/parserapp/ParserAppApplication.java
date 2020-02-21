@@ -8,7 +8,7 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {"ru.codeforensics.photomark"})
-@EnableCassandraRepositories
+
 @EnableJpaRepositories(basePackages = {"ru.codeforensics.photomark.model.repo"})
 @EntityScan(basePackages = {"ru.codeforensics.photomark.model.entities"})
 @PropertySource({"classpath:/common.properties"})

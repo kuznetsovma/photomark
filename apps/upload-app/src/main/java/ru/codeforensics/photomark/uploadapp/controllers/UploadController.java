@@ -2,6 +2,7 @@ package ru.codeforensics.photomark.uploadapp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,9 @@ public class UploadController extends AbstractController {
     Client client = clientOptional.get();
 
     PhotoMetaTransfer photoMetaTransfer = new PhotoMetaTransfer(code,
-        client.getId(), lineName, FilenameUtils.getExtension(file.getOriginalFilename()));
+        client.getId(), lineName,
+        FilenameUtils.getExtension(file.getOriginalFilename()),
+        LocalDateTime.now());
     String metaJson = mapper.writeValueAsString(photoMetaTransfer);
 
     kafkaTemplate.send(filesTopic, code, file.getBytes());

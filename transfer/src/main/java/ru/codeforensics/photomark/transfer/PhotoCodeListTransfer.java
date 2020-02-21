@@ -8,5 +8,5 @@ import lombok.Data;
 public class PhotoCodeListTransfer {
 
   private List<PhotoCodeTransfer> codes = new ArrayList<>();
-  private Long total;
+  private long total;
 }

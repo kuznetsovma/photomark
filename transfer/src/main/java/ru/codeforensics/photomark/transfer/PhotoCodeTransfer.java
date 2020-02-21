@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PhotoCodeTransfer {
 
-  private Long id;
+  private String code;
   private LocalDateTime dateTime;
   private String standard;
-  private String code;
   private String line;
 }

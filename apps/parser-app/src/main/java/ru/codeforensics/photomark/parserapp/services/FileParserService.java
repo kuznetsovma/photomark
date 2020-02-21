@@ -35,6 +35,7 @@ public class FileParserService {
     String json = new String(fileMetaRecord.value());
     PhotoMetaTransfer photoMetaTransfer = mapper.readValue(json, PhotoMetaTransfer.class);
     PhotoMeta photoMeta = new PhotoMeta(photoMetaTransfer.getCode(),
+        photoMetaTransfer.getUploaded(),
         photoMetaTransfer.getClientId(),
         photoMetaTransfer.getLineName(),
         photoMetaTransfer.getExt());
