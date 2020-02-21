@@ -24,10 +24,6 @@ public class CassandraConfig {
   private int port;
   @Value("${cassandra.keyspace}")
   private String keyspace;
-  @Value("${cassandra.username}")
-  private String username;
-  @Value("${cassandra.password}")
-  private String password;
 
 
   @Bean
@@ -35,8 +31,6 @@ public class CassandraConfig {
     CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
     cluster.setContactPoints(contactPoints);
     cluster.setPort(port);
-    cluster.setUsername(username);
-    cluster.setPassword(password);
     return cluster;
   }
 
