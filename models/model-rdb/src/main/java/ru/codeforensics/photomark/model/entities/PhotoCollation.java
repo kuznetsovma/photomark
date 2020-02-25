@@ -1,5 +1,6 @@
 package ru.codeforensics.photomark.model.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -16,6 +17,7 @@ public class PhotoCollation extends AbstractEntity {
   private UserProfile userProfile;
 
   private LocalDateTime created = LocalDateTime.now();
+  private LocalDate createdDate = created.toLocalDate();
   private LocalDateTime started;
   private LocalDateTime finished;
 
