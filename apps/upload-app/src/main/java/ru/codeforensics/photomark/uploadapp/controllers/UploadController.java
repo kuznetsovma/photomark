@@ -1,10 +1,10 @@
 package ru.codeforensics.photomark.uploadapp.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.apache.commons.io.FilenameUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -12,20 +12,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import ru.codeforensics.photomark.model.entities.Client;
 import ru.codeforensics.photomark.services.StatisticService;
-import ru.codeforensics.photomark.transfer.inner.PhotoMetaTransfer;
+import ru.codeforensics.photomark.transfer.PhotoUploadTransfer;
+import ru.codeforensics.photomark.transfer.inner.PhotoTransfer;
 
 @Controller
 public class UploadController extends AbstractController {
 
   @Value("${kafka.topic.files}")
   private String filesTopic;
-  @Value("${kafka.topic.files.meta}")
-  private String filesMetaTopic;
 
   @Autowired
   private ObjectMapper mapper;
@@ -38,31 +36,31 @@ public class UploadController extends AbstractController {
 
   @PostMapping("/v1/uploadPhoto")
   public ResponseEntity uploadFile(
-      @RequestHeader(name = "line_name") String lineName,
-      @RequestHeader(name = "km") String code,
-      @RequestHeader(name = "X-API-Key") String xApiKey,
-      @RequestParam("file") MultipartFile file) throws IOException {
+      @RequestHeader(name = "X-API-Key") String apiKey,
+      @RequestBody PhotoUploadTransfer transfer) throws IOException {
 
-    Optional<Client> clientOptional = clientRepo.findByKey(xApiKey);
+    Optional<Client> clientOptional = clientRepo.findByKey(apiKey);
     if (!clientOptional.isPresent()) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     Client client = clientOptional.get();
 
-    PhotoMetaTransfer photoMetaTransfer = new PhotoMetaTransfer(code,
-        client.getId(), lineName,
-        FilenameUtils.getExtension(file.getOriginalFilename()),
-        LocalDateTime.now());
-    String metaJson = mapper.writeValueAsString(photoMetaTransfer);
+    if (transfer.getMessageId() == null || transfer.getCameraId() == null || transfer.getImageData() == null) {
+      return  ResponseEntity.badRequest().build();
+    }
 
-    kafkaTemplate.send(filesTopic, code, file.getBytes());
-    kafkaTemplate.send(filesMetaTopic, code, metaJson.getBytes());
+    PhotoTransfer photoTransfer = new PhotoTransfer(
+        client.getId(), LocalDateTime.now(), transfer.getMessageId(), transfer.getCameraId(), transfer.getCode(),
+        transfer.getImageData(), transfer.getImageCenterX(), transfer.getImageCenterY(), transfer.getImageBrightness(),
+        transfer.getImageContrast());
+    String photoTransferJson = mapper.writeValueAsString(photoTransfer);
 
-    statisticService.registerEvent(client, lineName);
+    kafkaTemplate.send(filesTopic, photoTransfer.getMessageId().toString(), photoTransferJson.getBytes());
 
-    return ResponseEntity.accepted().body(code);
+    statisticService.registerEvent(client, photoTransfer.getCameraId().toString());
+
+    return ResponseEntity.accepted().build();
   }
-
 
 }
