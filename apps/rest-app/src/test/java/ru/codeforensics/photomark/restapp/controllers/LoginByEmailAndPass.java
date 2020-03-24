@@ -12,24 +12,30 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
+
 public class LoginByEmailAndPass {
 
     static String login(String email, String password) throws IOException {
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("http://dev-rest.codeforensics.ru/v1/login");
-        String json = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";
-        StringEntity entity = new StringEntity(json);
-        httpPost.setEntity(entity);
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("Content-type", "application/json");
-        httpPost.setEntity(new StringEntity(json, ContentType.create("application/x-www-form-urlencoded", Consts.UTF_8)));
+        try {
+            HttpPost httpPost = new HttpPost("http://dev-rest.codeforensics.ru/v1/login");
+            String json = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";
+            StringEntity entity = new StringEntity(json);
+            httpPost.setEntity(entity);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setEntity(new StringEntity(json, ContentType.create("application/x-www-form-urlencoded", Consts.UTF_8)));
 
-        CloseableHttpResponse response = httpclient.execute(httpPost);
-        String result = EntityUtils.toString(response.getEntity());
+            CloseableHttpResponse response = httpclient.execute(httpPost);
+            String result = EntityUtils.toString(response.getEntity());
 
-        ObjectMapper mapper = new ObjectMapper();
-        Object jsonObject = mapper.readValue(result, Object.class);
-        String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-        return prettyJson;
+            ObjectMapper mapper = new ObjectMapper();
+            Object jsonObject = mapper.readValue(result, Object.class);
+            String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+            return prettyJson;
+
+        } finally {
+            httpclient.close();
+        }
     }
 }
