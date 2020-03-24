@@ -1,7 +1,6 @@
 package ru.codeforensics.photomark.restapp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minidev.json.JSONUtil;
 import org.apache.http.Consts;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -12,11 +11,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 class LoginControllerTest {
     @Test
