@@ -11,7 +11,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-
 public class LoginByEmailAndPass {
 
     static String login(String email, String password) throws IOException {
