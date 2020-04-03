@@ -1,4 +1,5 @@
-package ru.codeforensics.photomark.services;
+package ru.codeforensics.photomark.model;
+
 
 public class TestBean2 {
     private String name;
@@ -7,8 +8,9 @@ public class TestBean2 {
         return name;
     }
 
-    public void setName(String name) {
+    public String setName(String name) {
         this.name = name;
+        return name;
     }
 
     public TestBean2(String name) {
