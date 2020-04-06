@@ -1,13 +1,14 @@
 package ru.codeforensics.photomark.learn;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 @SpringBootApplication
-    public class Learn {
+public class Learn {
 
-        public static void main(String[] args) {
-            SpringApplication.run(Learn.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(Learn.class, args);
 
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
@@ -26,6 +27,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
         context.close();
 
-        }
+    }
 
 }
