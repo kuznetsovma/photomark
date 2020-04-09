@@ -1,4 +1,4 @@
-package ru.codeforensics.photomark.learn;
+package ru.codeforensics.photomark.learn.music;
 
 public interface Music {
     String getSong();

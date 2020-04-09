@@ -1,37 +1,25 @@
 package ru.codeforensics.photomark.learn;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
-
+@EnableScheduling
 @SpringBootApplication
 public class LearnApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(LearnApplication.class, args);
+  @Autowired
+  private MusicPlayer player;
 
-        System.out.println("Hello word!");
-        System.out.println("Hello word!");
-        System.out.println("Hello word!");
-        System.out.println("Hello word!");
+  @Scheduled(fixedDelay = 1_000)
+  public void play() {
+    player.playMusic();
+  }
 
-//        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-//
-//        Music music = context.getBean("rockMusic", Music.class);
-//        Music music2 = context.getBean("classikalMusic", Music.class);
-//
-//        MusicPlayer musicPlayer = new MusicPlayer(music);
-//        MusicPlayer musicPlayer2 = new MusicPlayer(music2);
-//
-//		System.out.println();
-//
-//        musicPlayer.playMusic();
-//        musicPlayer2.playMusic();
-//
-//        System.out.println();
-//
-//        context.close();
-
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(LearnApplication.class, args);
+  }
 
 }
