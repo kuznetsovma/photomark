@@ -14,6 +14,9 @@
     <module>apps/rest-app</module>
     <module>apps/upload-app</module>
       <module>learn</module>
+      <module>learn/learnAddTable</module>
+      <module>learn/learnAddBeans</module>
+      <module>learn/learnAddCrud</module>
   </modules>
 
   <parent>

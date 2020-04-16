@@ -1,4 +1,4 @@
-package ru.codeforensics.photomark.learn.music;
+package ru.codeforensics.photomark.learnAddBeans.music;
 
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package ru.codeforensics.photomark.learn;
+package ru.codeforensics.photomark.learnAddBeans;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @EnableScheduling
 @SpringBootApplication
-public class LearnApplication {
+public class LearnAddBeansApplication {
 
   @Autowired
   private MusicPlayer player;
@@ -19,7 +19,9 @@ public class LearnApplication {
   }
 
   public static void main(String[] args) {
-    SpringApplication.run(LearnApplication.class, args);
+    SpringApplication.run(LearnAddBeansApplication.class, args);
+
+
   }
 
 }
