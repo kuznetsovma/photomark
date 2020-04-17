@@ -9,26 +9,21 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
 
-
 @SpringBootApplication
 public class LearnAddCrudApplication {
 
-  @Autowired
-  private EmployeesService employeesService;
+    @Autowired
+    private EmployeesService employeesService;
 
-  public static void main(String[] args) {
-    SpringApplication.run(LearnAddCrudApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(LearnAddCrudApplication.class, args);
+    }
 
 
-  @EventListener(ApplicationReadyEvent.class)
-  private void testJpaMethods(){
-Employees employees = new Employees();
-
-    employeesService.findAll().forEach(it-> System.out.println(it));
-
-  }
-
+    @EventListener(ApplicationReadyEvent.class)
+    private void testJpaMethods() {
+        employeesService.findAll().forEach(it -> System.out.println(it));
+    }
 
 
 }
