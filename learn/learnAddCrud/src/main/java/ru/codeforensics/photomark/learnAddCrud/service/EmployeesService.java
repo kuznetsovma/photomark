@@ -2,6 +2,7 @@ package ru.codeforensics.photomark.learnAddCrud.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import ru.codeforensics.photomark.learnAddCrud.entity.Employees;
 import ru.codeforensics.photomark.learnAddCrud.repository.EmployeesRepository;
 

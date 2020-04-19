@@ -1,6 +1,5 @@
 package ru.codeforensics.photomark.learnAddCrud;
 
-import ru.codeforensics.photomark.learnAddCrud.entity.Employees;
 import ru.codeforensics.photomark.learnAddCrud.service.EmployeesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,15 +14,14 @@ public class LearnAddCrudApplication {
     @Autowired
     private EmployeesService employeesService;
 
+
     public static void main(String[] args) {
         SpringApplication.run(LearnAddCrudApplication.class, args);
     }
-
 
     @EventListener(ApplicationReadyEvent.class)
     private void testJpaMethods() {
         employeesService.findAll().forEach(it -> System.out.println(it));
     }
-
 
 }

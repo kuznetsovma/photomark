@@ -17,6 +17,7 @@
       <module>learn/learnAddTable</module>
       <module>learn/learnAddBeans</module>
       <module>learn/learnAddCrud</module>
+      <module>learn/learnAddWebTable</module>
   </modules>
 
   <parent>
