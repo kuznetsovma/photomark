@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class Employees {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long employeeId;
 
     @Column
@@ -25,7 +25,7 @@ public class Employees {
     }
 
 
-    public Long getEmployeeId() {
+    public Long getEmployeeId(long l) {
         return employeeId;
     }
 

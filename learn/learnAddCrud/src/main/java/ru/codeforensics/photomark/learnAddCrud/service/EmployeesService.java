@@ -20,7 +20,10 @@ public class EmployeesService {
 
     public List<Employees> findAll() {
         return employeesRepository.findAll();
+    }
 
+    public void createEmployees(Employees employees) {
+        employeesRepository.save(employees);
     }
 
 }
