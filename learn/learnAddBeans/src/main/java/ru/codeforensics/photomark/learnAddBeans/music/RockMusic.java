@@ -1,5 +1,5 @@
 package ru.codeforensics.photomark.learnAddBeans.music;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
